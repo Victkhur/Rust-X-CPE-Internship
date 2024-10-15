@@ -10,5 +10,5 @@ cd project
 ```
 This opens the new project in visual studio code
 ```
->.code
+>code .
 ```
