@@ -44,9 +44,21 @@ By default, variables in Rust are immutable, meaning their value cannot be chang
 ```
 fn main() {
     let age = 25;
-    println!("Your age is {}", x);
+    println!("Your age is {}", age);
     
     // This will cause an error because x is immutable
     // age = 26;
 }
 ```
+### 2. Mutable Variable
+To allow a variable to be changed (mutable), use the `mut` keyword:
+```
+fn main() {
+    let mut age = 25;
+    println!("Your age is: {}", age);
+    
+    age = 26; // Now you can change the value
+    println!("Your next age will be {}", age);
+}
+```
+Here, `age` is mutable, so you can change its value after it has been assigned.
