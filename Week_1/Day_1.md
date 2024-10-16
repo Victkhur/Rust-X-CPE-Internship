@@ -1,3 +1,5 @@
+# Day 1 On Rust
+I will be installing Rust on my System. I will be documenting the steps, I follow to install rust on my system
 # Installing Rust on Windows
 **Step 1: Download and run the installer**
 - Go to the official Rust website: https://www.rust-lang.org/tools/install
