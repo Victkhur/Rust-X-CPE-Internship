@@ -46,7 +46,7 @@ fn main() {
     let age = 25;
     println!("Your age is {}", age);
     
-    // This will cause an error because x is immutable
+    // This will cause an error because age is immutable
     // age = 26;
 }
 ```
