@@ -5,17 +5,6 @@
 ```
 cargo new project
 ```
-This creates a new folder called `project` with the following structure:
-```
-project/
-├── Cargo.toml
-└── src/
-    └── main.rs
-```
-- `Cargo.toml:` This is the configuration file for the project, containing information about dependencies, project metadata, etc.
-
-- `src/main.rs:` This is the main Rust source file where your code will be written.
-
 
 ## Navigate to the project folder
 Move into the newly created project directory:
@@ -45,4 +34,19 @@ You should see the following output in your terminal:
     Finished dev [unoptimized + debuginfo] target(s) in 0.46s
      Running `target/debug/hello_world`
 Hello, world!
+```
+# Variable in Rust
+In Rust, variables are declared using the `let` keyword, and by default, they are immutable. If you want a variable to be mutable (i.e., you want to change its value later), you must explicitly use the `mut` keyword. Here's a breakdown of how variables work in Rust:
+
+### 1. Immutable Variable (Default)
+
+By default, variables in Rust are immutable, meaning their value cannot be changed after they are assigned.
+```
+fn main() {
+    let age = 25;
+    println!("Your age is {}", x);
+    
+    // This will cause an error because x is immutable
+    // age = 26;
+}
 ```
