@@ -1,7 +1,7 @@
 # Rust-X-CPE-Internship
 Rust Benin is partnering with the Department of Computer Engineering, UNIBEN to give the best programming experience in learning Rust.
 
-The program promises to be impactful as wonderful and industry-expert mentors are already on ground.
+The program promises to be impactful as wonderful and industry-expert mentors are already on ground. I will  be writing and documenting my journey
 
 # Week 1: Rust Basics & Syntax
 **Day 1-5:**
