@@ -1,3 +1,5 @@
+# Day 2 Rust
+Today I will be creating my first code, compiling and running the code. I aslo learn variables in rust 
 # Creating a New Project Using Cargo 
 1. Open your terminal.
 2. Navigate to the directory where you want to create the new project.
