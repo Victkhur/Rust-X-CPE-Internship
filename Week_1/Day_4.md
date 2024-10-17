@@ -1,10 +1,10 @@
 # Day 4 On Rust
-I will be learning and documenting about **Function**, **Conditional**, **Loops** on Rust
+I will be learning and documenting about **Function** on Rust
 # Function 
 Function in Rust is a fundamental building block, allowing you to define reusable blocks of code. 
 Rust functions can accept parameters, return values, and have strong type-checking at compile time.
 
-# Basic Function Syntax
+## Basic Function Syntax
 Functions in Rust are defined using the `fn` keyword, followed by the function name, parameters, and a return type (if any). 
 Here's the basic syntax:
 ```
@@ -38,23 +38,3 @@ fn print_sum(x: i32, y: i32) {
     println!("The sum of {} and {} is {}", x, y, x + y);
 }
 ```
-# Conditional on Rust
-In Rust, conditional statements allow you to control the flow of your program based on certain conditions. 
-The main conditional structure in Rust is the `if` statement, which works similarly to conditionals in other programming languages. 
-Rust also supports `else if` and `else` clauses to handle multiple conditions.
-```
-fn main() {
-    let age = 33;
-
-    if age >40 {
-        print!("Age is greater than 40");
-    } else if age == 40 {
-        print!("Age is equal to 40");
-    } else {
-        print!("Age is less than 40");
-    }
-
-}
-```
-# Loops on Rust
-In Rust, there are three main types of loops that allow you to repeat code: `loop`, `while`, and `for`.
