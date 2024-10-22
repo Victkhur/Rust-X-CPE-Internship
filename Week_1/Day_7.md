@@ -22,4 +22,38 @@ fn main() {
 - In this example, ownership of the `String` is moved from `s1` to `s2`. 
 Once `s2` takes ownership, `s1` is no longer valid, and trying to use it would result in a compile-time error.
 
+# Borrowing
+Borrowing allows you to access a value without taking ownership of it. When you borrow a value, you do not move the ownership; instead, you create a reference to the original owner’s value. There are two types of borrowing:
 
+1. **Immutable borrowing** (`&T`): You can have many immutable references to a value.
+2. **Mutable borrowing** (`&mut T`): Only one mutable reference can exist at a time, and there can't be any immutable references to the same value when a mutable reference exists.
+
+**Example of Borrowing:**
+**Immutable Borrowing:**
+```
+fn main() {
+    let s1 = String::from("hello");
+    
+    let len = calculate_length(&s1);  // borrow s1 (immutable)
+    
+    println!("The length of '{}' is {}.", s1, len); // s1 is still accessible here
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()  // since s is a reference, it does not own the value
+}
+```
+**Mutable Borrowing:**
+```
+fn main() {
+    let mut s1 = String::from("hello");
+
+    change(&mut s1);  // mutable borrow
+
+    println!("{}", s1);  // s1 can still be used here after the mutable borrow
+}
+
+fn change(s: &mut String) {
+    s.push_str(", world");  // modifies the original string
+}
+```
