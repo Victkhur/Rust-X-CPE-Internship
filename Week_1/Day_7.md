@@ -57,3 +57,38 @@ fn change(s: &mut String) {
     s.push_str(", world");  // modifies the original string
 }
 ```
+
+# Lifetime
+A lifetime represents the scope during which a reference is valid. Every reference in Rust has a lifetime, which can either be implicit or explicitly specified. The Rust compiler uses lifetimes to keep track of how long references are valid and to ensure that they don’t outlive the data they refer to.
+
+## Lifetime Annotations
+When references have lifetimes that depend on one another, Rust may require lifetime annotations. Lifetime annotations are not about changing how long something lives; they are about telling the compiler how the lifetimes of references relate to each other.
+
+**Example Without Lifetime Annotations**
+
+For simple cases, the Rust compiler can infer the lifetimes without requiring explicit annotations. For example:
+```
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+Here, `x` and `y` are references to &str, but Rust can infer that both references must be valid for the same lifetime. This is due to Rust's lifetime elision rules, which infer common cases automatically.
+
+**Example Requiring Lifetime Annotations**
+
+Sometimes Rust can't infer lifetimes, especially when dealing with multiple references or returning references. In such cases, we need to use lifetime annotations.
+```
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+- In this case, the function `longest` accepts two string slices (`x` and `y`), both with the lifetime `'a`.
+- The lifetime annotation `'a` tells Rust that the returned reference will be valid as long as both input references are valid.
