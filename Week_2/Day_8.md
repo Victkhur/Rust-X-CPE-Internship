@@ -26,3 +26,32 @@ fn main() {
 ```
 - Here, the Person struct has three fields: `name`, `age`, and `email`. Each field has a type, and instances of the struct can store values for those fields.
 - You can access individual fields using dot notation (e.g., `person1.name`).
+
+# Enums
+In Rust, an enum (short for enumeration) is a custom data type that allows you to define a type by enumerating its possible values. Enums are useful when you need to represent a value that can take on multiple "variants," where each variant can hold different data types or even no data at all.
+
+**Example of a Simple Enum**
+Here’s an example where we define an enum to represent the four cardinal directions:
+```
+enum Direction {
+    North,
+    South,
+    East,
+    West,
+}
+
+fn main() {
+    let direction = Direction::North;
+
+    match direction {
+        Direction::North => println!("Going North!"),
+        Direction::South => println!("Going South!"),
+        Direction::East => println!("Going East!"),
+        Direction::West => println!("Going West!"),
+    }
+}
+```
+In this example:
+
+- The Direction enum has four variants: `North`, `South`, `East`, and `West`.
+- The `match` expression is used to handle each possible variant of `Direction`.
