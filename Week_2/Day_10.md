@@ -36,6 +36,8 @@ The `match` statement checks each variant of Status.
 When `status` is `Active`, `Inactive`, or `Pending`, the corresponding code block is executed.
 
 **The** `_` **Pattern (Wildcard)**
+
+
 The `_` pattern is used as a "catch-all" for cases that don’t match any specific pattern. 
 It’s typically used as the last match arm and serves as a default case.
 ```
