@@ -57,8 +57,10 @@ fn main() {
         price: 1000,
     };
 
-    // Add the item to the inventory
+   // Adding the items to the inventory
     inv.add_item(item1);
+    inv.add_item(item2);
+    inv.add_item(item3);
 
     // Access and print details of the first item in the inventory
     let item = &inv.items[0];
