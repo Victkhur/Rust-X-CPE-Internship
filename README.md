@@ -22,3 +22,17 @@ The program promises to be impactful as wonderful and industry-expert mentors ar
 **Day 12-14:**
 - Deep dive into Rust's error handling with `Result` and `Option`.
 - **Project:** Add error handling to the inventory, making it more robust.
+
+## Week 3: Collections and Iterators
+
+**Day 15-17:**
+- Learn about vectors, hash maps, and strings.
+- **Project:** Build a contact book app, allowing for the addition, removal, and search of contacts.
+
+**Day 18-19:**
+- Master iterators and closures.
+- **Project:** Add sorting and filtering options to the contact book using iterators.
+
+**Day 20-21:**
+- Study traits and generics in Rust.
+- **Project:** Refactor the contact book to make it more generic and reusable.
