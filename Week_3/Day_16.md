@@ -36,6 +36,7 @@ scores.insert("Blue", 15); // Changes the score for "Blue" to 15
 ```
 for (key, value) in &scores {
     println!("{}: {}", key, value);
+
 }
 ```
 - **Removing Elements:**
@@ -43,3 +44,26 @@ for (key, value) in &scores {
 ```
 scores.remove("Blue");
 ```
+## String
+In Rust, **String** is a growable, mutable, UTF-8 encoded string type. It is used to represent and manipulate text, and it is different from `&str`, which is a string slice (an immutable view of a string).
+
+**Key Features of String**
+- **Creating a String:**
+  - You can create an empty String or initialize it with a literal.
+```
+let mut greeting = String::new(); // empty string
+let hello = String::from("Hello, world!"); // initialized string
+```
+- **Appending to a String:**
+  - Use the push method to add a single character, or push_str to append a string slice.
+```
+let mut s = String::from("Hello");
+s.push(',');
+s.push_str(" world!");
+```
+
+**Common Methods:**
+- `len():` Returns the length of the string in bytes.
+- `is_empty():` Checks if the string is empty.
+- `contains():` Checks if the string contains a substring.
+- `replace():` Replaces a part of the string with another string.
