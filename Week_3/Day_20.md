@@ -42,7 +42,7 @@ In this example:
 
 # Generics 
 Generic allow you to write code that works with different types while maintaining type safety.
-They eanble you to define functions, structs, enums, and methods that can operate on multiple types without sacrifacing performance.
+They enable you to define functions, structs, enums, and methods that can operate on multiple types without sacrifacing performance.
 ```
 struct Container<T> {
     item : T
