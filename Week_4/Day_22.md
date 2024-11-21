@@ -12,3 +12,5 @@ In Rust, async is particularly useful for I/O-bound operations, like networking 
 3. **Task spawning** to run tasks concurrently.
 
 # Key Concepts in Tokio
+1 Async Functions (`async fn`)
+    - Functions defined with `async fn` return a **future**, a value representing a computation that hasn’t completed yet.
