@@ -5,20 +5,17 @@ use scraper::{Html, Selector};
 use tokio::sync::mpsc;
 use futures::stream::{self, StreamExt};
 use serde::{Deserialize, Serialize};
-use tokio::fs;
 
-// Structure to hold scraped data
 #[derive(Debug, Serialize, Deserialize)]
 struct ScrapedData {
     url: String,
     title: String,
     description: Option<String>,
-    links: Vec<String>,
+    first_paragraph: Option<String>,
     status_code: u16,
     fetch_time_ms: u128,
 }
 
-// Configuration for the scraper
 #[derive(Debug)]
 struct ScraperConfig {
     concurrent_requests: usize,
@@ -36,7 +33,6 @@ impl Default for ScraperConfig {
     }
 }
 
-// Main scraper struct
 struct WebScraper {
     client: Client,
     config: ScraperConfig,
@@ -52,135 +48,87 @@ impl WebScraper {
         Ok(Self { client, config })
     }
 
-async fn scrape_url(&self, url: String, retry_count: u32) -> Result<ScrapedData, Box<dyn Error>> {
+    async fn scrape_url(&self, url: String, retry_count: u32) -> Result<ScrapedData, Box<dyn Error>> {
         let start_time = Instant::now();
-        
+
         let response = match self.client.get(&url).send().await {
             Ok(resp) => resp,
             Err(e) => {
                 if retry_count < self.config.max_retries {
-                    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-                    // Box the future for recursion
-                    return Box::pin(self.scrape_url(url, retry_count + 1)).await;
+                    return Box::pin(self.scrape_url(url.clone(), retry_count + 1)).await;
                 } else {
                     return Err(Box::new(e));
                 }
             }
         };
 
-        let status = response.status().as_u16();
-        let html = response.text().await?;
-        let document = Html::parse_document(&html);
+        let status_code = response.status().as_u16();
+        let fetch_time_ms = start_time.elapsed().as_millis();
+        let body = response.text().await?;
+
+        let document = Html::parse_document(&body);
 
         let title_selector = Selector::parse("title").unwrap();
+        let description_selector = Selector::parse("meta[name=\"description\"]").unwrap();
+        let paragraph_selector = Selector::parse("p").unwrap();
+
         let title = document
             .select(&title_selector)
             .next()
-            .map(|element| element.text().collect::<String>())
+            .map(|e| e.inner_html())
             .unwrap_or_default();
 
-        let desc_selector = Selector::parse("meta[name='description']").unwrap();
         let description = document
-            .select(&desc_selector)
+            .select(&description_selector)
             .next()
-            .and_then(|element| element.value().attr("content"))
-            .map(String::from);
+            .and_then(|e| e.value().attr("content"))
+            .map(|s| s.to_string());
 
-        let link_selector = Selector::parse("a[href]").unwrap();
-        let links: Vec<String> = document
-            .select(&link_selector)
-            .filter_map(|element| element.value().attr("href"))
-            .map(String::from)
-            .collect();
+        let first_paragraph = document
+            .select(&paragraph_selector)
+            .next()
+            .map(|e| e.inner_html());
 
         Ok(ScrapedData {
             url,
             title,
             description,
-            links,
-            status_code: status,
-            fetch_time_ms: start_time.elapsed().as_millis(),
+            first_paragraph,
+            status_code,
+            fetch_time_ms,
         })
-    }
-
-    async fn scrape_urls(&self, urls: Vec<String>) -> Result<Vec<ScrapedData>, Box<dyn Error>> {
-        let (tx, mut rx) = mpsc::channel(self.config.concurrent_requests);
-
-        // Process URLs concurrently with rate limiting
-        let process_handle = tokio::spawn(async move {
-            let mut results = Vec::new();
-            while let Some(data) = rx.recv().await {
-                results.push(data);
-            }
-            results
-        });
-
-        // Create stream of URLs and process them
-        stream::iter(urls)
-            .map(|url| {
-                let tx = tx.clone();
-                
-                async move {
-                    match self.scrape_url(url, 0).await {
-                        Ok(data) => {
-                            if let Err(e) = tx.send(data).await {
-                                eprintln!("Error sending data: {}", e);
-                            }
-                        }
-                        Err(e) => eprintln!("Error scraping URL: {}", e),
-                    }
-                }
-            })
-            .buffer_unordered(self.config.concurrent_requests)
-            .collect::<Vec<()>>()
-            .await;
-
-        // Drop sender to close channel
-        drop(tx);
-
-        // Wait for all results to be processed
-        let results = process_handle.await?;
-        Ok(results)
-    }
-
-    async fn save_results(&self, results: Vec<ScrapedData>, filename: &str) -> Result<(), Box<dyn Error>> {
-        let json = serde_json::to_string_pretty(&results)?;
-        fs::write(filename, json).await?;
-        Ok(())
     }
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    // Example URLs to scrape
+    let config = ScraperConfig::default();
+    let scraper = WebScraper::new(config)?;
+
     let urls = vec![
+        "https://example.com".to_string(),
         "https://www.rust-lang.org".to_string(),
-        "https://docs.rs".to_string(),
-        "https://crates.io".to_string(),
     ];
 
-    // Create scraper with custom configuration
-    let config = ScraperConfig {
-        concurrent_requests: 3,
-        timeout_seconds: 20,
-        max_retries: 2,
-    };
+    let (tx, mut rx) = mpsc::channel(100);
 
-    let scraper = WebScraper::new(config)?;
-    
-    println!("Starting scrape of {} URLs...", urls.len());
-    let start_time = Instant::now();
+    stream::iter(urls)
+        .for_each_concurrent(scraper.config.concurrent_requests, |url| {
+            let tx = tx.clone();
+            let scraper = &scraper;
+            async move {
+                if let Ok(data) = scraper.scrape_url(url, 0).await {
+                    tx.send(data).await.unwrap();
+                }
+            }
+        })
+        .await;
 
-    // Perform scraping
-    let results = scraper.scrape_urls(urls).await?;
+    drop(tx);
 
-    // Print summary
-    println!("Scraping completed in {}ms", start_time.elapsed().as_millis());
-    println!("Successfully scraped {} sites", results.len());
-
-    // Save results to file
-    scraper.save_results(results, "scraping_results.json").await?;
-    println!("Results saved to scraping_results.json");
+    while let Some(data) = rx.recv().await {
+        println!("{:#?}", data);
+    }
 
     Ok(())
 }
