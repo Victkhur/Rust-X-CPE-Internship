@@ -2,6 +2,7 @@
 
 **Day 22-25:**
 - Learn async programming with `tokio`.
+- **Project:** Build a countdown Timer 
 - **Project:** Build an asynchronous web scraper that fetches and processes data from multiple websites concurrently.
 
 **Day 26-28:**
