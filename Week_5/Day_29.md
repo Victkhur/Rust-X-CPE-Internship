@@ -17,3 +17,17 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 ```
+
+## 2. Writing to a File
+To write to a file, use `File::create` (to create or truncate a file) or `OpenOptions` (to append or write conditionally).
+
+```
+use std::fs::File;
+use std::io::Write;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::create("example.txt")?;
+    file.write_all(b"Hello, Rust!")?;
+    Ok(())
+}
+```
