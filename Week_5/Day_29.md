@@ -33,3 +33,15 @@ fn main() -> std::io::Result<()> {
 ```
 ## 3. Using `OpenOptions`
 `OpenOptions` allows more control, such as opening a file in read, write, append, or truncate mode.
+```
+use std::fs::OpenOptions;
+
+fn main() -> std::io::Result<()> {
+    let mut file = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open("example.txt")?;
+    file.write_all(b"\nAppending this line!")?;
+    Ok(())
+}
+```
