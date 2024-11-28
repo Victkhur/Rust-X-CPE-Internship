@@ -74,3 +74,18 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 ```
+## 6. Writing Line by Line
+Use `BufWriter` for efficient line-by-line writes.
+```
+use std::fs::File;
+use std::io::{self, BufWriter, Write};
+
+fn main() -> io::Result<()> {
+    let file = File::create("example.txt")?;
+    let mut writer = BufWriter::new(file);
+
+    writeln!(writer, "First line")?;
+    writeln!(writer, "Second line")?;
+    Ok(())
+}
+```
