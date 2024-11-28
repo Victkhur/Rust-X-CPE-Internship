@@ -31,4 +31,5 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 ```
-## 3. 
+## 3. Using `OpenOptions`
+`OpenOptions` allows more control, such as opening a file in read, write, append, or truncate mode.
