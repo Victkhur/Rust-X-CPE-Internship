@@ -45,3 +45,32 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 ```
+## 4. Handling Errors
+File I/O operations can fail (e.g., file not found, permission denied), so you must handle errors using `Result`.
+```
+use std::fs::File;
+
+fn main() {
+    match File::open("nonexistent.txt") {
+        Ok(_) => println!("File opened successfully."),
+        Err(e) => eprintln!("Error opening file: {}", e),
+    }
+}
+
+```
+## 5. Reading Line by Line
+For large files, you can use a `BufReader` to read line by line efficiently.
+```
+use std::fs::File;
+use std::io::{self, BufRead};
+
+fn main() -> io::Result<()> {
+    let file = File::open("example.txt")?;
+    let reader = io::BufReader::new(file);
+
+    for line in reader.lines() {
+        println!("{}", line?);
+    }
+    Ok(())
+}
+```
