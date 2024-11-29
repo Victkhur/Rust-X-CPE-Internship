@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+///// Represents different log levels for classification
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 enum LogLevel {
     Info,
@@ -11,6 +12,7 @@ enum LogLevel {
     Critical,
 }
 
+/// Structured representation of a log entry
 #[derive(Debug)]
 struct LogEntry {
     timestamp: String,
@@ -19,11 +21,13 @@ struct LogEntry {
     service: String,
 }
 
+/// Log parser and analyzer
 struct LogAnalyzer {
     log_entries: Vec<LogEntry>,
 }
 
 impl LogAnalyzer {
+/// Create a new LogAnalyzer by parsing logs from a file
     fn new(filepath: &str) -> Result<Self, std::io::Error> {
         let file = File::open(Path::new(filepath))?;
         let reader = BufReader::new(file);
@@ -37,7 +41,9 @@ impl LogAnalyzer {
         Ok(LogAnalyzer { log_entries })
     }
 
+    /// Parse a single log line into a LogEntry
     fn parse_log_line(line: &str) -> Option<LogEntry> {
+// Expected log format: "TIMESTAMP|LEVEL|SERVICE|MESSAGE"
         let parts: Vec<&str> = line.split('|').collect();
         
         if parts.len() != 4 {
@@ -60,6 +66,7 @@ impl LogAnalyzer {
         })
     }
 
+     /// Generate a comprehensive log report from the parsed log entries
     fn generate_report(&self) -> LogReport {
         let total_entries = self.log_entries.len();
         
@@ -86,6 +93,7 @@ impl LogAnalyzer {
     }
 }
 
+/// Structured report of log analysis
 struct LogReport {
     total_entries: usize,
     level_counts: HashMap<LogLevel, usize>,
@@ -94,6 +102,7 @@ struct LogReport {
 }
 
 impl LogReport {
+/// Print a detailed, human-readable report of the log analysis
     fn print(&self) {
         println!("Log Analysis Report");
         println!("==================");
